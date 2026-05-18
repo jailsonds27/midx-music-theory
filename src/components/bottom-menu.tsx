@@ -1,7 +1,6 @@
-import { LayoutGrid, ListMusic } from "lucide-react"
+import { ListMusic, Music } from "lucide-react"
 import { parseAsStringLiteral, useQueryState } from "nuqs"
-
-const TABS = ["harmonic", "progression"] as const
+import { HOME_TABS } from "./bottom-menu.constants"
 
 const MENU_ITEMS = [
   {
@@ -10,16 +9,16 @@ const MENU_ITEMS = [
     icon: ListMusic,
   },
   {
-    value: "harmonic" as const,
-    label: "Campo Harmônico",
-    icon: LayoutGrid,
+    value: "music" as const,
+    label: "Musicas",
+    icon: Music,
   },
 ]
 
 export function BottomMenu() {
   const [tab, setTab] = useQueryState(
     "tab",
-    parseAsStringLiteral(TABS).withDefault("progression")
+    parseAsStringLiteral(HOME_TABS).withDefault("progression")
   )
 
   return (

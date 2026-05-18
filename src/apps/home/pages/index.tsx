@@ -1,5 +1,6 @@
 import { HarmonicField } from "@/apps/home/components/harmonic-field"
 import { BottomMenu } from "@/components/bottom-menu"
+import { HOME_TABS } from "@/components/bottom-menu.constants"
 import { Tabs, TabsContent } from "@/components/ui/tabs"
 import {
   AVAILABLE_TONICS_BY_ACCIDENTAL,
@@ -8,10 +9,8 @@ import {
 import { parseAsString, parseAsStringLiteral, useQueryStates } from "nuqs"
 import { useMemo } from "react"
 import { Progression } from "../components/progression"
-import { NoteMenu } from "@/components/note-menu"
 import { Header } from "@/components/header"
 
-const HOME_TABS = ["harmonic", "progression"] as const
 const MODES = ["major", "minor"] as const
 const ACCIDENTALS = ["sharp", "flat"] as const
 
@@ -32,7 +31,6 @@ export default function HomePage() {
   return (
     <main className="mx-auto w-full max-w-4xl px-4 pb-24">
       <Header />
-      <NoteMenu />
       <Tabs
         value={tab}
         onValueChange={(value) => {

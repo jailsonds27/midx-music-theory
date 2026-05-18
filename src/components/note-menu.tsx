@@ -1,9 +1,10 @@
-import { useEffect, useMemo, useRef } from "react"
+import { useCallback, useEffect, useMemo, useRef } from "react"
 import {
   AVAILABLE_TONICS_BY_ACCIDENTAL,
   convertTonicAccidental,
 } from "@/lib/harmonic-field"
 import { parseAsString, parseAsStringLiteral, useQueryStates } from "nuqs"
+import { Minus, Plus } from "lucide-react"
 
 const MODES = ["major", "minor"] as const
 const CHROMATIC_TYPES = ["sharp", "flat"] as const
@@ -49,23 +50,43 @@ export function NoteMenu() {
     if (!el) return
 
     dragRef.current = {
-      isDragging: true,
+      isDragging: false,
       startX: e.clientX,
       scrollLeft: el.scrollLeft,
     }
-    el.setPointerCapture(e.pointerId)
   }
 
   const onPointerMove = (e: React.PointerEvent<HTMLDivElement>) => {
-    if (!dragRef.current.isDragging || !scrollRef.current) return
-    scrollRef.current.scrollLeft =
-      dragRef.current.scrollLeft - (e.clientX - dragRef.current.startX)
+    if (!scrollRef.current) return
+    const dx = e.clientX - dragRef.current.startX
+    if (Math.abs(dx) > 5) {
+      dragRef.current.isDragging = true
+    }
+    if (!dragRef.current.isDragging) return
+    e.preventDefault()
+    scrollRef.current.scrollLeft = dragRef.current.scrollLeft - dx
   }
 
-  const onPointerUp = (e: React.PointerEvent<HTMLDivElement>) => {
+  const onPointerUp = () => {
     dragRef.current.isDragging = false
-    scrollRef.current?.releasePointerCapture(e.pointerId)
   }
+
+  const onNoteClick = (n: string) => {
+    if (dragRef.current.isDragging) return
+    void setQueryState({ note: n })
+  }
+
+  const goToPrev = useCallback(() => {
+    const idx = availableTonics.indexOf(currentNote)
+    const prevIdx = idx <= 0 ? availableTonics.length - 1 : idx - 1
+    void setQueryState({ note: availableTonics[prevIdx] })
+  }, [availableTonics, currentNote, setQueryState])
+
+  const goToNext = useCallback(() => {
+    const idx = availableTonics.indexOf(currentNote)
+    const nextIdx = idx >= availableTonics.length - 1 ? 0 : idx + 1
+    void setQueryState({ note: availableTonics[nextIdx] })
+  }, [availableTonics, currentNote, setQueryState])
 
   return (
     <div className="flex flex-col gap-3">
@@ -128,35 +149,55 @@ export function NoteMenu() {
         </div>
       </div>
 
-      <div
-        ref={scrollRef}
-        className="no-scrollbar flex cursor-grab items-center gap-3 overflow-x-auto active:cursor-grabbing"
-        style={{ touchAction: "pan-x" }}
-        onPointerDown={onPointerDown}
-        onPointerMove={onPointerMove}
-        onPointerUp={onPointerUp}
-        onPointerCancel={onPointerUp}
-      >
-        {availableTonics.map((n) => {
-          const isSelected = n === currentNote
-          const label = mode === "minor" ? `${n}m` : n
+      <div className="flex items-center gap-2">
+        <button
+          type="button"
+          onClick={goToPrev}
+          className="grid size-9 shrink-0 place-items-center rounded-full transition hover:bg-muted"
+          aria-label="Nota anterior"
+        >
+          <Minus className="size-4" />
+        </button>
 
-          return (
-            <button
-              key={n}
-              data-note={n}
-              type="button"
-              onClick={() => void setQueryState({ note: n })}
-              className={`grid size-11 shrink-0 place-items-center rounded-full text-sm font-medium transition-colors ${
-                isSelected
-                  ? "bg-foreground text-background"
-                  : "border border-border text-foreground"
-              }`}
-            >
-              {label}
-            </button>
-          )
-        })}
+        <div
+          ref={scrollRef}
+          className="no-scrollbar flex flex-1 cursor-grab items-center gap-3 overflow-x-auto active:cursor-grabbing"
+          style={{ touchAction: "pan-x" }}
+          onPointerDown={onPointerDown}
+          onPointerMove={onPointerMove}
+          onPointerUp={onPointerUp}
+          onPointerCancel={onPointerUp}
+        >
+          {availableTonics.map((n) => {
+            const isSelected = n === currentNote
+            const label = mode === "minor" ? `${n}m` : n
+
+            return (
+              <button
+                key={n}
+                data-note={n}
+                type="button"
+                onClick={() => onNoteClick(n)}
+                className={`grid size-11 shrink-0 place-items-center rounded-full text-sm font-medium transition-colors ${
+                  isSelected
+                    ? "bg-foreground text-background"
+                    : "border border-border text-foreground"
+                }`}
+              >
+                {label}
+              </button>
+            )
+          })}
+        </div>
+
+        <button
+          type="button"
+          onClick={goToNext}
+          className="grid size-9 shrink-0 place-items-center rounded-full transition hover:bg-muted"
+          aria-label="Próxima nota"
+        >
+          <Plus className="size-4" />
+        </button>
       </div>
     </div>
   )
