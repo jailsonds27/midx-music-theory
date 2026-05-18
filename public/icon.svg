@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512">
+    <rect width="512" height="512" rx="64" fill="#1a1a1a" />
+    <!-- 7 notes in a circle: C D E F G A B -->
+    <!-- center=256,230  radius=110  start=-90deg  step=360/7=~51.43deg -->
+    <circle cx="256" cy="120" r="32" fill="none" stroke="#ffffff" stroke-width="2.5" />
+    <text x="256" y="129" text-anchor="middle" fill="#ffffff" font-family="sans-serif" font-size="26"
+        font-weight="bold">C</text>
+    <circle cx="352" cy="155" r="32" fill="none" stroke="#ffffff" stroke-width="2.5" />
+    <text x="352" y="164" text-anchor="middle" fill="#ffffff" font-family="sans-serif" font-size="26"
+        font-weight="bold">D</text>
+    <circle cx="375" cy="260" r="32" fill="none" stroke="#ffffff" stroke-width="2.5" />
+    <text x="375" y="269" text-anchor="middle" fill="#ffffff" font-family="sans-serif" font-size="26"
+        font-weight="bold">E</text>
+    <circle cx="315" cy="340" r="32" fill="none" stroke="#ffffff" stroke-width="2.5" />
+    <text x="315" y="349" text-anchor="middle" fill="#ffffff" font-family="sans-serif" font-size="26"
+        font-weight="bold">F</text>
+    <circle cx="197" cy="340" r="32" fill="none" stroke="#ffffff" stroke-width="2.5" />
+    <text x="197" y="349" text-anchor="middle" fill="#ffffff" font-family="sans-serif" font-size="26"
+        font-weight="bold">G</text>
+    <circle cx="137" cy="260" r="32" fill="none" stroke="#ffffff" stroke-width="2.5" />
+    <text x="137" y="269" text-anchor="middle" fill="#ffffff" font-family="sans-serif" font-size="26"
+        font-weight="bold">A</text>
+    <circle cx="160" cy="155" r="32" fill="none" stroke="#ffffff" stroke-width="2.5" />
+    <text x="160" y="164" text-anchor="middle" fill="#ffffff" font-family="sans-serif" font-size="26"
+        font-weight="bold">B</text>
+    <text x="256" y="448" text-anchor="middle" fill="#ffffff" font-family="sans-serif" font-size="48" font-weight="900"
+        letter-spacing="4">MIDX</text>
+</svg>

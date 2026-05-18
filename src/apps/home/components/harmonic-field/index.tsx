@@ -1,10 +1,5 @@
-import { useMemo } from "react"
-import {
-  convertTonicAccidental,
-  getHarmonicField,
-  type AccidentalType,
-  type HarmonicMode,
-} from "@/lib/harmonic-field"
+import type { AccidentalType, HarmonicMode } from "@/lib/harmonic-field"
+import { useHarmonicFieldIndex } from "./useHarmonicFieldIndex"
 
 type HarmonicFieldProps = {
   note: string
@@ -13,29 +8,11 @@ type HarmonicFieldProps = {
 }
 
 export function HarmonicField({ note, mode, accidental }: HarmonicFieldProps) {
-  const tonic = useMemo(() => {
-    return convertTonicAccidental(note, accidental)
-  }, [accidental, note])
-
-  const harmonicField = useMemo(
-    () => getHarmonicField(tonic, mode, accidental),
-    [mode, tonic, accidental]
-  )
-
-  const graphNodes = useMemo(() => {
-    const total = harmonicField.chords.length
-
-    return harmonicField.chords.map((item, index) => {
-      const angle = -Math.PI / 2 + (index * 2 * Math.PI) / total
-      const radius = 38
-
-      return {
-        ...item,
-        x: 50 + radius * Math.cos(angle),
-        y: 50 + radius * Math.sin(angle),
-      }
-    })
-  }, [harmonicField.chords])
+  const { harmonicField, graphNodes } = useHarmonicFieldIndex({
+    note,
+    mode,
+    accidental,
+  })
 
   return (
     <main className="mx-auto flex min-h-svh w-full max-w-md flex-col gap-4">
@@ -49,7 +26,7 @@ export function HarmonicField({ note, mode, accidental }: HarmonicFieldProps) {
           </p>
         </div>
         <div className="relative mx-auto mt-8 aspect-square w-full max-w-88">
-          <div className="absolute inset-[12%] rounded-full border border-dashed border-border/60" />
+          <div className="absolute inset-[12%] rounded-full border border-dashed" />
 
           {graphNodes.map((node) => {
             const isTonic = node.degree === 1
